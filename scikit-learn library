@@ -1,0 +1,55 @@
+# Step 1: Import necessary libraries
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import classification_report
+
+# Step 2: Prepare the dataset
+data = {
+    'Description': [
+        "A high school girl falls in love with a popular boy.",
+        "In a world of magic, a young boy sets out to become the best wizard.",
+        "A girl is torn between two boys who both care for her deeply.",
+        "A superhero fights to save the city from villains.",
+        "A detective solves mysterious crimes in a big city.",
+        "A prince must protect his kingdom from dark forces.",
+        "Two best friends fall for the same person, leading to complications.",
+        "A group of survivors battles zombies in a post-apocalyptic world.",
+        "A girl navigates high school while balancing love and friendships.",
+        "A warrior embarks on a dangerous quest to retrieve a magical artifact."
+    ],
+    'Category': [
+        "Romance", "Fantasy", "Romance", "Action", "Mystery",
+        "Fantasy", "Romance", "Action", "Romance", "Fantasy"
+    ]
+}
+
+df = pd.DataFrame(data)
+
+# Step 3: Convert text data into TF-IDF features
+vectorizer = TfidfVectorizer(stop_words='english')
+X = vectorizer.fit_transform(df['Description'])
+
+# Step 4: Prepare labels
+y = df['Category']
+
+# Step 5: Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Step 6: Train a Decision Tree Classifier
+classifier = DecisionTreeClassifier()
+classifier.fit(X_train, y_train)
+
+# Step 7: Make predictions on the test data
+y_pred = classifier.predict(X_test)
+
+# Step 8: Display classification report
+print(classification_report(y_test, y_pred))
+
+# (Optional) Use Logistic Regression instead of Decision Tree
+# from sklearn.linear_model import LogisticRegression
+# classifier = LogisticRegression()
+# classifier.fit(X_train, y_train)
+# y_pred = classifier.predict(X_test)
+# print(classification_report(y_test, y_pred))
